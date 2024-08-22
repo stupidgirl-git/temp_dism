@@ -1,0 +1,326 @@
+.heading-container {
+    background-color: #2039aa;
+    color: rgb(255, 255, 255);
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .heading-container h1 {
+    color: #ffffff;
+    font-size: xx-large;
+    margin: 0;
+  }
+
+  .table-container {
+    width: 80%;
+    margin: 0 auto; /* Center the container horizontally */
+    
+  }
+  
+  .horizontal_navbar { /* Style for all rows */
+    display: flex;
+  }
+
+  .cell {
+    width: 33%; 
+    border: 10px solid rgb(255, 255, 255); /* Optional borders for cells */
+    text-align: center; /* Optional text alignment */
+    padding-left: 30px; /* Increase left padding to 15px */
+    padding-right: 30px; /* Increase right padding to 20px */
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: lightblue; /* Add background color */
+    font-weight: bold; /* Make text bold */
+font-size: x-large;
+a {
+    text-decoration: none;
+}
+
+    /* Styles on hover */
+    &:hover {
+      background-color: skyblue; /* Change background color on hover */
+      cursor: pointer; /* Optional: change cursor to pointer on hover */
+    }
+  }
+  
+
+  nav {
+    background-color: #089790; /* Optional background color */
+    display: flex;
+    justify-content: space-between; /* Distribute links horizontally */
+    padding: 10px;
+  }
+  
+  nav ul {
+    list-style: none; /* Remove default bullet points */
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Remove default padding */
+  }
+  
+  nav li {
+    margin: 0 10px; /* Add horizontal spacing between links */
+  }
+  
+  nav a {
+    text-decoration: none; /* Remove underline from links */
+    color: #333; /* Link text color */
+  }
+  
+  nav a:hover {
+    color: #f12020; /* Change link text color on hover */
+  }
+  
+  .container {
+    display: flex; /* Make the container a flex container */
+    width: 25%; /* Occupy full width of the page */
+    height: calc(100vh - element_height); /* Adjust height based on another element's height */
+  }
+  
+  .left-container, .right-container {
+    flex: 1; /* Both containers share remaining space equally */
+    /* Add individual styles for each container (optional) */
+  }
+  
+  /* Ensure equal height for both containers */
+  .container > div {
+    height: 100%; /* Set height to 100% of the container */
+  }
+
+  .db_button {
+    background-color: rgb(23, 139, 58);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: large;
+  }
+  .db_button:hover {
+    background-color: rgb(17, 103, 46);
+  }
+  
+  .db_button:active {
+    background-color: rgb(39, 169, 82);
+  }
+
+
+  .db_table_container {
+    /* General container styles */
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    
+    /* Optional: Add a background color */
+    /* background-color: #f5f5f5; */
+  }
+  
+  .db_table_container table {
+    /* Style the table itself */
+    width: 100%; /* Make the table fill the container */
+    border-collapse: collapse; /* Remove table borders between cells */
+  }
+  
+  .db_table_container th,
+  .db_table_container td {
+    /* Style table headers and cells */
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left; /* Align content to the left */
+  }
+  
+  .db_table_container th {
+    /* Style table headers specifically */
+    background-color: #eee; /* Light background for headers */
+    font-weight: bold; /* Make headers bolder */
+  }
+
+
+  /* Add some basic styling to the table */
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  text-align: center;
+  margin: auto;
+  align-items: center;
+}
+
+
+
+#myTable th, #myTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  
+}
+
+#myTable th {
+  background-color: #f0f0f0;
+}
+
+#myTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#myTable tr:hover {
+  background-color: #ddd;
+}
+
+#tableHead {
+  background-color: #f0f0f0;
+}
+
+.Table_Header {
+  background-color: #056286; /* a pleasant blue color */
+  color: #fdfdfd; /* royal blue */
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+a.back {
+  background-color: #007bff; /* blue color */
+  color: #ffffff; /* white text color */
+  padding: 10px 20px; /* add some padding */
+  border: none;
+  border-radius: 5px; /* add a rounded corner */
+  cursor: pointer; /* change the mouse pointer to a hand when hovered */
+  text-decoration: none; /* remove underline */
+}
+
+a.back:hover {
+  background-color: #0069d9; /* darker blue color on hover */
+}
+
+.db_button_container {
+  text-align: center;
+}
+
+.plot_container {
+  max-width: 800px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+/* Style the small square images */
+.small-square {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  margin: 10px;
+  border-radius: 10px; /* Add a border radius to make it rounded */
+}
+
+/* Style the large square images */
+.large-square {
+  width: 200px;
+  height: 200px;
+  border: 2px solid #ccc;
+  margin: 10px;
+  border-radius: 20px; /* Add a border radius to make it rounded */
+}
+
+/* Style the horizontal rectangle images */
+.horizontal-rectangle {
+  width: 300px;
+  height: 100px;
+  border: 2px solid #ccc;
+  margin: 10px;
+  border-radius: 10px; /* Add a border radius to make it rounded */
+}
+
+/* Style the vertical rectangle images */
+.vertical-rectangle {
+  width: 100px;
+  height: 300px;
+  border: 2px solid #ccc;
+  margin: 10px;
+  border-radius: 10px; /* Add a border radius to make it rounded */
+}
+
+
+#graph1 {
+  width: 800px; /* half the width */
+  height: 400px; /* desired height */
+  background-color: #ccc; /* optional background color */
+  float: left; /* float the element to the left */
+}
+#graph2 {
+  width: 400px; /* square, same height as graph1 */
+  height: 400px; /* desired height */
+  background-color: #aaa; /* optional background color */
+  float: left; /* float the element to the left */
+}
+#graph3 {
+  width: 500px; /* horizontal rectangle, same height as graph1 */
+  height: 1000px; /* desired height */
+  background-color: #666; /* optional background color */
+  margin-left: 25%;
+  float:right; /* margin to push it to the right */
+}
+
+
+.form-container {
+  max-width: 300px; /* adjust this to your desired width */
+  margin: 40px auto; /* center the container horizontally */
+  background-color: #f0f0f0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+form {
+  max-width: 250px; /* adjust this to your desired width */
+  margin: 20px auto; /* center the form horizontally */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  height: 30px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+input[type="submit"] {
+  width: 100%;
+  height: 40px;
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #23527c;
+}
+
+select {
+  width: 200px; /* adjust the width to your desired size */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+select option {
+  padding: 10px;
+}
+
+select option:hover {
+  background-color: #ccc;
+}
+
+select option:focus {
+  background-color: #aaa;
+}

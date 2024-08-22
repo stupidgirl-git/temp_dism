@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <title>DISM-Upload</title>
+  <meta charset="utf-8" />
+	<meta name="lang" content="en" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <div class="heading-container">
+    <h1>Database of Indian Securities Market</h1>
+  </div>
+  <div class="table-container">
+    <div class="horizontal_navbar">
+      <div class="cell"><a href="{{url_for('app_blueprint.index')}}">Dashboard</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.database')}}">Database</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.upload')}}">Upload</a></div>
+    </div>
+  </div>
+  
+    
+    <div class="formcontainer">
+      <form action="#" method="post">
+        <label for="select1">Select category</label>
+        <select id="select1" name="select1">
+          <option value="">Select data</option>
+          <option value="mutual_fund">Mutual Funds</option>
+          <option value="primary_market">Primary Market</option>
+          <option value="derivative">Derivatives</option>
+          <option value="secondary_market">Secondary Markets</option>  
+        </select>
+        <br><br>
+        <label for="select2">Select an option:</label>
+        <select id="select2" name="select2">
+          <!-- options will be populated dynamically -->
+        </select>
+        <br><br>
+        <input type="file" accept=".xlsx, .csv" type="file" id="fileInput">
+        <br><br>
+        <div id="fileDisplay"></div>
+        <input type="submit" value="Login">
+      </form>
+    </div>
+  
+  
+  
+
+  <script>
+    var select1 = document.getElementById("select1");
+    var select2 = document.getElementById("select2");
+
+    // Add an event listener to the first select element
+    select1.addEventListener("change", function() {
+      // Get the selected value of the first select element
+      var selectedValue = select1.options[select1.selectedIndex].value;
+
+      // Clear the second select element
+      select2.innerHTML = "";
+
+      // Populate the second select element based on the selected value
+      switch(selectedValue) {
+        case "mutual_fund":
+          // Add options to the second select element
+          var option1 = document.createElement("option");
+          option1.text = "Monthly Cumulative Report (MCR)";
+          option1.value = "mcr";
+          select2.appendChild(option1);
+          break;
+        case "primary_market":
+          // Add options to the second select element
+          var option1 = document.createElement("option");
+          option1.text = "Issue wise Public Issue Report";
+          option1.value = "issue_wise_public_issue_report";
+          select2.appendChild(option1);
+          break;
+        case "derivative":
+          // Add options to the second select element
+          var option1 = document.createElement("option");
+          option1.text = "Monthly Derivative Report for NSE";
+          option1.value = "monthly_derivative_report_for_NSE";
+          select2.appendChild(option1);
+          var option2 = document.createElement("option");
+          option2.text = "Monthly Derivative Report for BSE";
+          option2.value = "monthly_derivative_report_for_BSE";
+          select2.appendChild(option2);
+          break;
+        case "secondary_market":
+          // Add options to the second select element
+          var option1 = document.createElement("option");
+          option1.text = "Monthly Cash Segment Report for NSE";
+          option1.value = "monthly_cash_report_for_NSE";
+          select2.appendChild(option1);
+          var option2 = document.createElement("option");
+          option2.text = "Monthly Cash Segment Report for BSE";
+          option2.value = "monthly_cash_report_for_BSE";
+          select2.appendChild(option2);
+          break;
+        default:
+          // Add default options or do nothing
+      }
+    });
+    </script>
+    <!--
+    <script>
+    const fileInput = document.getElementById("fileInput");
+let tableHTML;
+
+fileInput.addEventListener("change", function(event) {
+  const file = fileInput.files[0];
+  if (!file) {
+    console.log("No file selected");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    try {
+      const data = d3.csvParse(event.target.result);
+      if (data instanceof Error) {
+        console.error("Error parsing CSV:", data);
+        return;
+      }
+      let filteredData = data.filter(function(row) {
+        return Object.values(row).every(function(value) {
+          return value !== '';
+        });
+      });
+      console.log(filteredData);
+      console.log(filteredData[0]);
+      let headers = Object.keys(filteredData[0]);
+      tableHTML = '<table><thead><tr>';
+      headers.forEach(function(header) {
+        tableHTML += '<th>' + header + '</th>';
+      });
+      tableHTML += '</tr></thead><tbody>';
+      filteredData.forEach(function(row) {
+        tableHTML += '<tr>';
+        headers.forEach(function(header) {
+          tableHTML += '<td>' + row[header] + '</td>';
+        });
+        tableHTML += '</tr>';
+      });
+      tableHTML += '</tbody></table>';
+      document.getElementById("fileDisplay").innerHTML = tableHTML;
+    } catch (error) {
+      console.error("Error parsing CSV:", error);
+    }
+  };
+  reader.readAsText(file);
+});
+  </script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<script>
+var ExcelToJSON = function() {
+
+  this.parseExcel = function(fileInput) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var data = e.target.result;
+      var workbook = XLSX.read(data, {
+        type: 'binary'
+      });
+
+      workbook.SheetNames.forEach(function(sheetName) {
+        // Here is your object
+        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        var json_object = JSON.stringify(XL_row_object);
+        console.log(json_object);
+
+      })
+
+    };
+
+    reader.onerror = function(ex) {
+      console.log(ex);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+};
+</script>
+</body>
+
+  
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <title>DISM-database</title>
+  <meta charset="utf-8" />
+	<meta name="lang" content="en" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+ 
+ 
+</head>
+<body>
+  <div class="heading-container">
+    <h1>Database on Indian Securities Market</h1>
+  </div>
+  <div class="table-container">
+    <div class="horizontal_navbar">
+      <div class="cell"><a href="{{url_for('app_blueprint.index')}}">Dashboard</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.database')}}">Database</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.upload')}}">Upload</a></div>
+    </div>
+  </div>
+  
+
+
+
+  <script type="text/javascript">
+    // Define the table columns
+    var columns = ["Name", "Category", "From", "To", "Frequency", "Links","Download"];
+  
+  
+    // Create the table element
+    var table = document.createElement("table");
+    table.id = "myTable";
+  
+    // Create the table header
+    var thead = document.createElement("thead");
+    table.appendChild(thead);
+  
+    // Create the table header rows
+    var headerRow = document.createElement("tr");
+    for (var i = 0; i < columns.length; i++) {
+      var th = document.createElement("th");
+      th.textContent = columns[i];
+      headerRow.appendChild(th);
+    }
+    thead.appendChild(headerRow);
+    console.log('header row created');
+  
+    // Create the table body
+    var tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+  
+    // Function to populate the table
+    function populateTable(data) {
+      tbody.innerHTML = ""; // Clear existing table body
+      for (var i = 0; i < data.length; i++) {
+        var row = document.createElement("tr");
+        for (var j = 0; j < columns.length; j++) {
+          var td = document.createElement("td");
+          if(j == 5||j==6){ // assuming the Links column is at index 5
+            td.innerHTML = '<a href="' + data[i][columns[j]]+ '">' + ['View','Download'][j-5] + '</a> ';
+            console.log(td.innerHTML);
+          } else {
+            td.textContent = data[i][columns[j]];
+          }
+          
+
+          row.appendChild(td);
+        }
+        tbody.appendChild(row);
+      }
+    }
+  
+    // Make an AJAX request to fetch the data
+    $.ajax({
+      type: "GET",
+      url: "/database/api/data",
+      dataType: "json",
+      success: function(data) {
+        console.log(data)
+        var populatedData=data.data;
+        populateTable(populatedData);
+        console.log('Data fetched and populated');
+        // Add the table to the page
+        document.body.appendChild(table);
+      }
+    });
+  
+  function filterData(section) {
+    
+    $.ajax({
+        type: "GET",
+        url: "/database/filter/" + section,
+        dataType: "json",
+        success: function(data_filtered) {
+            console.log(data_filtered);
+            var populatedData_filtered=data_filtered.data_filtered;
+            populateTable(populatedData_filtered);
+            console.log('Data fetched and populated');
+            // Add the table to the page
+            document.body.appendChild(table);
+        }
+    });
+}
+
+// Add an event listener to the button
+document.querySelectorAll('.db_button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var section = this.textContent;
+        filterData(section);
+    });
+  });
+</script>
+
+
+<div class="db_button_container">
+  <button class= 'db_button' onclick="filterData('mutual')">Mutual Funds</button>
+  <button class= 'db_button' onclick="filterData('primary')">Primary Market</button>
+  <button class= 'db_button' onclick="filterData('derivative')">Derivatives</button>
+  <button class= 'db_button' onclick="location.href='{{ url_for('app_blueprint.database')}}'"> ALL</button>
+</div>
+
+
+</body>
+
+
+  
+</html>

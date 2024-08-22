@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+  <title>DISM-dashboard</title>
+  <meta charset="utf-8" />
+	<meta name="lang" content="en" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+<body>
+  <div class="heading-container">
+    <h1>Database on Indian Securities Market</h1>
+  </div>
+  <div class="table-container">
+    <div class="horizontal_navbar">
+      <div class="cell"><a href="{{url_for('app_blueprint.index')}}">Dashboard</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.database')}}">Database</a></div>
+      <div class="cell"><a href="{{url_for('app_blueprint.upload')}}">Upload</a></div>
+    </div>
+  </div>
+  
+    <div id="graph1"></div>  
+    <div id="graph2"></div> 
+    <div id="graph3"></div> 
+    
+
+
+    <script>
+      // Access data from Flask template variable
+      var graphJSON1 = {{graphJSON1| safe}};
+      var graphDiv1 = document.getElementById('graph1');
+      Plotly.plot(graphDiv1, graphJSON1.data, graphJSON1.layout);
+
+      var graphJSON2 = {{graphJSON2| safe}};
+      var graphDiv2 = document.getElementById('graph2');
+      Plotly.plot(graphDiv2, graphJSON2.data, graphJSON2.layout);
+
+      var graphJSON3 = {{graphJSON3| safe}};
+      var graphDiv3 = document.getElementById('graph3');
+      Plotly.plot(graphDiv3, graphJSON3.data, graphJSON3.layout);
+      
+    
+      // Parse JSON data and create the plot
+      //var plotData = JSON.parse(graphJSON);
+      //Plotly.newPlot('my-div1', plotData);  // Render the plot in the container
+      </script>
+</body>
+
+  
+</html>
