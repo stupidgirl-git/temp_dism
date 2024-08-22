@@ -15,14 +15,17 @@ import random
 import pandas as pd
 import numpy as np
 import datetime
+from io import BytesIO
 import os
+import pyodbc
+from sqlalchemy import create_engine
 # from pandas.core.json_utils import jsonable_encoder
 # from pandas.io.json import jsonable_encoder
 
 app_blueprint= Blueprint('app_blueprint',__name__)
 
 
-database_home= pd.read_excel('D:/DISM/files/database_home.xlsx', engine='openpyxl')
+database_home= pd.read_excel('/home/stupid/DISM/DISM/files/database_home.xlsx', engine='openpyxl')
 
 x_data = [1, 2, 3, 4, 5]
 y_data = [10, 26, 85, 28, 72]
@@ -50,30 +53,16 @@ def index():
     graphing_stuff3 = fig3.to_json()
     
     return render_template('index.html', graphJSON1=graphing_stuff1, graphJSON2=graphing_stuff2, graphJSON3=graphing_stuff3)
-    
+
+
 @app_blueprint.route('/database')
 def database():    
     return render_template('database.html')
 
-# define dataframe to store excel file
-excel_files = database_home[['Table','Internal_links']]
 
-
-
-
-# Define a route for downloading the Excel files
-@app_blueprint.route('/database/<file_name>/download')
-def download_excel(file_name):
-    if file_name not in excel_files['Table'].values:
-        return jsonify({'error': 'File not found'}), 404
-
-    excel_file =  excel_files.loc[excel_files['Table'] == file_name, 'Internal_links'].reset_index(drop=True)[0]
-
-    return send_file(excel_file, as_attachment=True)
 
 @app_blueprint.route('/database/api/data', methods=['GET'])
 def fetch_data():
-    # Fetch data from your repository (e.g., database, file, etc.)
     database_home_local = database_home.iloc[:,1:]
     database_home_local= database_home_local.iloc[:,:-2]
     database_home_local['From']= database_home_local['From'].dt.strftime('%Y-%m-%d')
@@ -95,76 +84,111 @@ def fetch_data_filter(section):
     return jsonify({'data_filtered':database_home_filter})
     
 
+
+# Define a route for downloading the Excel files
+@app_blueprint.route('/database/<file_name>/download')
+def download_excel(file_name):
+    Table_Name = file_name
+    db="defaultdb"
+    host="prasadmysql-sebidatabase1.b.aivencloud.com"
+    password="AVNS_5gFFh3T1VBzgguK4J2W"
+    port="12352"
+    user="avnadmin"
+    sql_query = 'mysql+pymysql://'+user+':'+password+'@'+host+':'+port+'/'+db
+    engine = create_engine(sql_query)
+    query = f"SELECT * FROM {Table_Name}"
+    df = pd.read_sql_query(query, engine)
+    df = df.fillna('')
+    print(df.columns)
+    df= df.round(2)
+    try:
+        df = df.drop(["Upload_Date"], axis=1)
+    except:
+        pass
+    try:
+        df = df.drop(["rank"], axis=1)
+    except:
+        pass   
+
+        
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name=file_name)
+    output.seek(0)
+    
+    return send_file(output,
+                     download_name=file_name+'.xlsx',
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+   
+
+
+
+
 @app_blueprint.route('/upload')
 def upload():
     return render_template('upload.html')
     
-root_dir = 'D:/DISM/files/'
-file_path = os.path.join(root_dir, '%s.csv')
+# root_dir = 'D:/DISM/files/'
+# file_path = os.path.join(root_dir, '%s.csv')
 
 @app_blueprint.route('/database/<file_name>')
 def process_file(file_name):
-    file_path = 'D:/DISM/files/'+file_name+'.csv'
-    print(file_path)
-    df = pd.read_csv(file_path)
-    df = df.iloc[:, 1:]
+    Table_Name = file_name
+    db="defaultdb"
+    host="prasadmysql-sebidatabase1.b.aivencloud.com"
+    password="AVNS_5gFFh3T1VBzgguK4J2W"
+    port="12352"
+    user="avnadmin"
+    sql_query = 'mysql+pymysql://'+user+':'+password+'@'+host+':'+port+'/'+db
+    engine = create_engine(sql_query)
+    query = f"SELECT * FROM {Table_Name}"
+    df = pd.read_sql_query(query, engine)
     df = df.fillna('')
     print(df.columns)
     df= df.round(2)
+    
+    try:
+        df = df.drop(["Upload_Date"], axis=1)
+    except:
+        pass
+    try:
+        df = df.drop(["rank"], axis=1)
+    except:
+        pass   
+    
     table_name_html = database_home.loc[database_home['Table'] == file_name, 'Name'].reset_index(drop=True)[0]
     return render_template('get_table.html', table_name_html=table_name_html, file_name=file_name)
 
 @app_blueprint.route('/<file_name>/api/df')
 def fetch_data_table(file_name):
-    file_path = 'D:/DISM/files/'+file_name+'.csv'
-    print(file_path)
-    df = pd.read_csv(file_path)
-    df = df.iloc[:, 1:]
+    Table_Name = file_name
+    db="defaultdb"
+    host="prasadmysql-sebidatabase1.b.aivencloud.com"
+    password="AVNS_5gFFh3T1VBzgguK4J2W"
+    port="12352"
+    user="avnadmin"
+    sql_query = 'mysql+pymysql://'+user+':'+password+'@'+host+':'+port+'/'+db
+    engine = create_engine(sql_query)
+    query = f"SELECT * FROM {Table_Name}"
+    df = pd.read_sql_query(query, engine)
     df = df.fillna('')
     df= df.round(2)
-    df_local = df.tail(5).to_dict(orient='records')
+    
+    try:
+        df = df.drop(["Upload_Date"], axis=1)
+    except:
+        pass
+    try:
+        df = df.drop(["rank"], axis=1)
+    except:
+        pass   
+    
+    df_local = df.tail(10).to_dict(orient='records')
     df_headers = df.columns.tolist()
     return jsonify({'df': df_local, 'df_headers': df_headers})
 
 
 
 
-# df1= pd.read_csv(r'D:/DISM/files/MF_m_01.csv')
-# df1=df1.iloc[:,1:]
-# df1=df1.fillna('')
 
-# @app_blueprint.route('/database/xx_m_01')
-# def xx_m_01():
-#     table_name_html= database_home['Name'][0].upper()
-#     return render_template('xx_m_01.html', table_name_html=table_name_html)
-
-# @app_blueprint.route('/xx_m_01/api/df')
-# def xx_m_01_fetch_data():    
-#     df1_local= df1.tail(5).to_dict(orient='records')
-#     df1_headers= df1.columns.tolist()
-#     return jsonify({'df':df_local,'df_headers':df_headers})
-
-
-# df2= pd.read_csv(r'D:/DISM/files/MF_m_02.csv')
-# df2=df2.iloc[:,1:]
-# df2=df2.fillna('')
-
-
-# @app_blueprint.route('/database/xx_m_02')
-# def xx_m_02():
-#     table_name_html= database_home['Name'][0].upper()
-#     return render_template('xx_m_02.html', table_name_html=table_name_html)
-
-# @app_blueprint.route('/xx_m_02/api/df')
-# def xx_m_02_fetch_data():    
-#     df2_local= df2.tail(5).to_dict(orient='records')
-#     df2_headers= df2.columns.tolist()
-#     return jsonify({'df':df2_local,'df_headers':df2_headers})
-
-
-
-
-# @app_blueprint.route('/database/mutual_fund')
-# def database_mutual_fund():
-    
-#     return render_template('database/mutual_fund.html',mutual_fund_json_data = mutual_fund_json_data , mutual_fund_table_html= mutual_fund_table_html)
