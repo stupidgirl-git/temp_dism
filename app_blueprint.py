@@ -22,7 +22,7 @@ import os
 app_blueprint= Blueprint('app_blueprint',__name__)
 
 
-database_home= pd.read_excel('/home/stupid/DISM/files/database_home.xlsx', engine='openpyxl')
+database_home= pd.read_excel('D:/DISM/files/database_home.xlsx', engine='openpyxl')
 
 x_data = [1, 2, 3, 4, 5]
 y_data = [10, 26, 85, 28, 72]
@@ -99,12 +99,12 @@ def fetch_data_filter(section):
 def upload():
     return render_template('upload.html')
     
-root_dir = '/home/stupid/DISM/files/'
+root_dir = 'D:/DISM/files/'
 file_path = os.path.join(root_dir, '%s.csv')
 
 @app_blueprint.route('/database/<file_name>')
 def process_file(file_name):
-    file_path = '/home/stupid/DISM/files/'+file_name+'.csv'
+    file_path = 'D:/DISM/files/'+file_name+'.csv'
     print(file_path)
     df = pd.read_csv(file_path)
     df = df.iloc[:, 1:]
@@ -116,7 +116,7 @@ def process_file(file_name):
 
 @app_blueprint.route('/<file_name>/api/df')
 def fetch_data_table(file_name):
-    file_path = '/home/stupid/DISM/files/'+file_name+'.csv'
+    file_path = 'D:/DISM/files/'+file_name+'.csv'
     print(file_path)
     df = pd.read_csv(file_path)
     df = df.iloc[:, 1:]
@@ -128,3 +128,43 @@ def fetch_data_table(file_name):
 
 
 
+
+# df1= pd.read_csv(r'D:/DISM/files/MF_m_01.csv')
+# df1=df1.iloc[:,1:]
+# df1=df1.fillna('')
+
+# @app_blueprint.route('/database/xx_m_01')
+# def xx_m_01():
+#     table_name_html= database_home['Name'][0].upper()
+#     return render_template('xx_m_01.html', table_name_html=table_name_html)
+
+# @app_blueprint.route('/xx_m_01/api/df')
+# def xx_m_01_fetch_data():    
+#     df1_local= df1.tail(5).to_dict(orient='records')
+#     df1_headers= df1.columns.tolist()
+#     return jsonify({'df':df_local,'df_headers':df_headers})
+
+
+# df2= pd.read_csv(r'D:/DISM/files/MF_m_02.csv')
+# df2=df2.iloc[:,1:]
+# df2=df2.fillna('')
+
+
+# @app_blueprint.route('/database/xx_m_02')
+# def xx_m_02():
+#     table_name_html= database_home['Name'][0].upper()
+#     return render_template('xx_m_02.html', table_name_html=table_name_html)
+
+# @app_blueprint.route('/xx_m_02/api/df')
+# def xx_m_02_fetch_data():    
+#     df2_local= df2.tail(5).to_dict(orient='records')
+#     df2_headers= df2.columns.tolist()
+#     return jsonify({'df':df2_local,'df_headers':df2_headers})
+
+
+
+
+# @app_blueprint.route('/database/mutual_fund')
+# def database_mutual_fund():
+    
+#     return render_template('database/mutual_fund.html',mutual_fund_json_data = mutual_fund_json_data , mutual_fund_table_html= mutual_fund_table_html)
