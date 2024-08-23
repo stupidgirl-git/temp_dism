@@ -25,7 +25,7 @@ from sqlalchemy import create_engine
 app_blueprint= Blueprint('app_blueprint',__name__)
 
 
-database_home= pd.read_excel('/home/stupid/DISM/DISM/files/database_home.xlsx', engine='openpyxl')
+database_home= pd.read_excel('/files/database_home.xlsx', engine='openpyxl')
 
 x_data = [1, 2, 3, 4, 5]
 y_data = [10, 26, 85, 28, 72]
